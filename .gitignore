@@ -1,0 +1,9 @@
+
+# ignore ipynb_ckeckpoints 
+.ipynb_checkpoints/
+
+# ignore cache 
+*.pyc
+
+# Byte-compiled
+__pycache__/

@@ -1,0 +1,3 @@
+[submodule "compytibility_pack"]
+	path = compytibility_pack
+	url = git@github.com:RHDZMOTA/compytibility_pack.git
