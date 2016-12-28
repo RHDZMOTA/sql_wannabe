@@ -288,18 +288,26 @@ class database:
             t1.columns = changeColName(axis_col, col1, n1)
             t2.columns = changeColName(axis_col, col2, n2)
             
+            warning_na = False
             
             def extract(_id):
-                return np.asscalar(t1.query('{} == {}'.format(axis_col,_id))[c].values)
-            
-            
+                temp = t1.query('{} == {}'.format(axis_col,_id))[c].values
+                if len(temp) == 0:
+                    warning_na = True
+                    return float('nan')
+                return np.asscalar(temp)            
+                
             for c in t1.columns:
                 if c == axis_col:
                     continue 
                     
                 t2[c] = t2[axis_col].apply(extract)
                 
-            return t2
+            if warning_na:
+                print('Warning: At least one row was dropped due to nans.')
+            
+            
+            return t2.dropna()
         
         # function to check if all status in table_status are zero
         def checkStatus(table_status):
@@ -326,7 +334,7 @@ class database:
                     continue 
                 # determine relation
                 rel = self.findRelation(table_name, t)
-                if type(rel) == type(None):
+                if type(rel) == type(None) or rel == 0:
                     continue
                 break
             
