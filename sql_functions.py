@@ -10,7 +10,7 @@ SQL FUNCTIONS
 import numpy  as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from compytibility.format_string import *
+from compytibility_pack.format_string import *
 
 # %% findKey
 
@@ -61,7 +61,7 @@ class database:
         self.fast_read = False 
         
         const_dict = {}
-        if type(db) == type(''):
+        if type(table_names) == type(''):
             
             # search tables under subdir named sql_like (save names)
             
@@ -190,7 +190,7 @@ class database:
         '''findRelation
         Not efficient. 
         '''
-        rs = db.relation_scheme
+        rs = self.relation_scheme
         
         at = self.availableTables( silence = True, ret_rn = True)
         if (not (table_name1 in at)) or (not (table_name2 in at)):
