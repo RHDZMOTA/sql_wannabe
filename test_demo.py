@@ -76,11 +76,16 @@ db.SELECT(colnames = ['Users.name', 'Teams.color'],
 
 # %% QUERY 
 
-db.SELECT(colnames = ['Users.name','Role.description','Teams.color'], 
-          _as      = ['Name','Role','Team color'],
+db.SELECT(colnames = ['Users.name','Role.description','Teams.color','Activities.description'], 
+          _as      = ['Name','Role','Team color','Act'],
           
-          FROM     = ['UserTeam','Users','Teams', 'Role'], 
+          FROM     = ['UserTeam','Users','Teams', 'Role','Activities'], 
           WHERE    = 'Teams.color == "green"'
           
          )
 
+# %%
+
+# %% 
+
+# %% 
