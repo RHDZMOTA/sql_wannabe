@@ -55,13 +55,23 @@ def integerIndex(df):
     pd.options.mode.chained_assignment = 'warn'
     return df 
 
+# %% files
+
+def filesInDir(path):
+    import os
+    files = []
+    for file in os.listdir(path):
+        if file.endswith(".csv"):
+            files.append(file.split('.')[0])
+    return files
+
 # %% 
 
 class database:
     
     desc = 'This is a database instance.'
     
-    def __init__(self, reference_path = 'sql_like/' , table_names = 'all', relation_scheme = []):
+    def __init__(self, reference_path = 'sql_example/' , table_names = 'all', relation_scheme = []):
         '''init
         ---- inputs
         db: list containing table names 
@@ -69,24 +79,25 @@ class database:
         '''
         self.reference_path = reference_path
         
+        if table_names == 'all':
+            table_names = filesInDir(reference_path)
+        
+        # construct database dictionary 
         db = {}
         for i in table_names:
             db[i] = reference_path+i+'.csv'
         
         self.ref = db
         
-        self.relation_scheme = relation_scheme
+        # get relation scheme 
+        if len(relation_scheme) == 0:
+            self.relation_scheme = loadRelation(reference_path)
+        else:
+            self.relation_scheme = relation_scheme
+        
+        # false fast read 
         self.fast_read = False 
         
-        const_dict = {}
-        if type(table_names) == type(''):
-            
-            # search tables under subdir named sql_like (save names)
-            
-            # create dictionary 
-            
-            # save results 
-            print('TODO.')
     
     def availableTables(self, silence = False, ret_rn = False):
         '''availableTables functions
@@ -101,18 +112,14 @@ class database:
             table_names.append(i)
             if not silence:
                 print(i)
+                
         if ret_rn:
             return table_names
 
         
-    def updateFastRead(self):
-        '''updateFastRead
-        '''
-        pass
-        
     def getCols(self, table_pd, table_name = '', colnames = []):
         '''getCols
-        Query columns 
+        Filter columns 
         
         ---- inputs 
         
@@ -313,12 +320,12 @@ class database:
             
             t1, t2 = integerIndex(t1), integerIndex(t2)
             
-            warning_na = False
+            self.warning_na = False
             
             def extract(_id):
                 temp = t1.query('{} == {}'.format(axis_col,_id))[c].values
                 if len(temp) == 0:
-                    warning_na = True
+                    self.warning_na = True
                     return float('nan')
                 return np.asscalar(temp)            
                 
@@ -328,7 +335,7 @@ class database:
                     
                 t2[c] = t2[axis_col].apply(extract)
                 
-            if warning_na:
+            if self.warning_na:
                 print('Warning: At least one row was dropped due to nans.')
             
             
