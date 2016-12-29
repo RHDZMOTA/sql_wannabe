@@ -46,11 +46,13 @@ def colIndex(col, columns):
             
 # index as integer
 def integerIndex(df):
+    pd.options.mode.chained_assignment = None
     columns = df.columns.values
     for cols in columns:
         if 'id_' in cols:
             df.loc[:,cols] = df[cols].apply(lambda x: int(x)).values
             #df[cols] = df[cols].apply(lambda x: int(x))
+    pd.options.mode.chained_assignment = 'warn'
     return df 
 
 # %% 
