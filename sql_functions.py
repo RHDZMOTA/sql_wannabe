@@ -39,11 +39,18 @@ def loadRelation(_path):
 
 # %% integerIndex
 
+def colIndex(col, columns):
+    for i in range(len(columns)):
+        if col == columns[i]:
+            return i
+            
 # index as integer
 def integerIndex(df):
-    for cols in df:
+    columns = df.columns.values
+    for cols in columns:
         if 'id_' in cols:
-            df[cols] = df[cols].apply(lambda x: int(x))
+            df.loc[:,cols] = df[cols].apply(lambda x: int(x)).values
+            #df[cols] = df[cols].apply(lambda x: int(x))
     return df 
 
 # %% 
