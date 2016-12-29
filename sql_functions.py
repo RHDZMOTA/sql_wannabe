@@ -134,12 +134,23 @@ class database:
         # TODO: verify if table exists 
         table_path = self.ref[table]
         
-        if len(colnames) == 0:
-            if self.fast_read:
-                return pd.read_pickle('{}fastread/{}.pkl'.format(self.reference_path,table))
-            return pd.read_csv(table_path)
+        # index as integer
+        def integerIndex(df):
+            for cols in df:
+                if 'id_' in cols:
+                    df[cols] = df[cols].apply(lambda x: int(x))
+            return df 
         
-        return self.getCols(pd.read_csv(table_path),table_path,colnames)
+        if self.fast_read:
+            temp_df = pd.read_pickle('{}fastread/{}.pkl'.format(self.reference_path,table))
+        else:
+            temp_df = pd.read_csv(table_path)
+            
+        temp_df = integerIndex(temp_df)
+        
+        if len(colnames) == 0:
+            return temp_df
+        return self.getCols(temp_df,table_path,colnames)
     
     def createFastRead(self):
         '''createFastRead function
