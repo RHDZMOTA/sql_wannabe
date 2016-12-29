@@ -36,7 +36,16 @@ def saveRelation(arr, _path):
     
 def loadRelation(_path):
     return list(np.load(_path+'relation_scheme.npy'))
-    
+
+# %% integerIndex
+
+# index as integer
+def integerIndex(df):
+    for cols in df:
+        if 'id_' in cols:
+            df[cols] = df[cols].apply(lambda x: int(x))
+    return df 
+
 # %% 
 
 class database:
@@ -133,13 +142,6 @@ class database:
         
         # TODO: verify if table exists 
         table_path = self.ref[table]
-        
-        # index as integer
-        def integerIndex(df):
-            for cols in df:
-                if 'id_' in cols:
-                    df[cols] = df[cols].apply(lambda x: int(x))
-            return df 
         
         if self.fast_read:
             temp_df = pd.read_pickle('{}fastread/{}.pkl'.format(self.reference_path,table))
@@ -300,6 +302,8 @@ class database:
             t1.columns = changeColName(axis_col, col1, n1)
             t2.columns = changeColName(axis_col, col2, n2)
             
+            t1, t2 = integerIndex(t1), integerIndex(t2)
+            
             warning_na = False
             
             def extract(_id):
@@ -319,7 +323,7 @@ class database:
                 print('Warning: At least one row was dropped due to nans.')
             
             
-            return t2.dropna()
+            return integerIndex(t2.dropna())
         
         # function to check if all status in table_status are zero
         def checkStatus(table_status):
