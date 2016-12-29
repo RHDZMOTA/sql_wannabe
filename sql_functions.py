@@ -192,7 +192,7 @@ class database:
         
         # save as pickle 
         for table in at: 
-            self.readTable(table).to_pickle('{}fastread/{}.pkl'.format(self.reference_path,table))
+            self.readTable(table).to_pickle(formatString('{}fastread/{}.pkl',[self.reference_path,table]))
         
         # enable
         self.fast_read = True 
@@ -457,7 +457,33 @@ class database:
             
         return tbl
         
+    def addRows(self, table_name, values, save = False):
+        '''addRows function 
+        Add rows to an existing table managed by the database.
+        ---- inputs
+        table_name: string (name of an existing table)
+        values: a dictionary containing keys as columnames and 
+        '''
+        
+        table = self.readTable(table_name)
+        
+        # index
+        ind = np.max(table.index.values)+1
+        
+        # setup newline
+        line = pd.DataFrame(values, index=[ind])
+        
+        # modify dataframe 
+        
+        table = pd.concat(table, line)
+        # save confition 
+        if save:
+            table.to_csv(formatString(self.reference_path+'{}.csv',table_name))
+            if self.fast_read:
+                table.to_pkl(formatString(self.reference_path+'fastread/{}.pkl', [table_name]))
+        return 
 
+        
 # %% 
 
 # %% 
