@@ -67,6 +67,14 @@ def filesInDir(path):
 
 # %% 
 
+# check for fastread
+def checkFastRead(path):
+    import os
+    everything = os.listdir(path)
+    return 'fastread' in everything
+
+# %% 
+
 class database:
     
     desc = 'This is a database instance.'
@@ -97,7 +105,9 @@ class database:
         
         # false fast read 
         self.fast_read = False 
-        
+    
+    def isFastRead(self):
+        return checkFastRead(self.reference_path)
     
     def availableTables(self, silence = False, ret_rn = False):
         '''availableTables functions
