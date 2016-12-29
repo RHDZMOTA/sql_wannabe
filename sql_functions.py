@@ -244,7 +244,8 @@ class database:
                 save_rel = r
         
         if type(save_rel) == type(None):
-            print('Warning: Relation not found.')
+            if not silence:
+                print('Warning: Relation not found.')
             return 0
         
         return findInd(table_name1, table_name2, save_rel)
