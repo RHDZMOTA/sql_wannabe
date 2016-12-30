@@ -9,11 +9,8 @@ from sql_functions import *
 
 # %% Create database instance
 
-db = database(
-    reference_path  = 'sql_example/',
-    table_names     = ['Users', 'Teams','UserTeam','Role','Activities'],
-    relation_scheme = loadRelation('sql_example/')
-)
+db = database(reference_path  = 'sql_example/')
+db.fast_read = True 
 
 # %% Enable readfast 
 
@@ -84,7 +81,23 @@ db.SELECT(colnames = ['Users.name','Role.description','Teams.color','Activities.
           
          )
 
-# %%
+# %% ADD NEW ROWS
+
+db.colsFrom('Users')
+
+line_values = {
+'id_user':8,
+'name':'Alejandra',
+'sex':'Female',
+'age':22,
+'weight':50,
+'height':1.70,
+'nationality':'mexican',
+'ethnic':'latin'
+}
+
+print('\nNew table:')
+db.addRow('Users',line_values)
 
 # %% 
 

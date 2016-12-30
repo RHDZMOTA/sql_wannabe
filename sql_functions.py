@@ -79,7 +79,7 @@ class database:
     
     desc = 'This is a database instance.'
     
-    def __init__(self, reference_path = 'sql_example/' , table_names = 'all', relation_scheme = []):
+    def __init__(self, reference_path = 'sql_example/' , table_names = 'all', relation_scheme = [], key_dict = 'read'):
         '''init
         ---- inputs
         db: list containing table names 
@@ -90,6 +90,12 @@ class database:
         if table_names == 'all':
             table_names = filesInDir(reference_path)
         
+        # save table_key values 
+        if key_dict == 'read':
+            self.key_dict = np.load(reference_path+'key_dict.npy').item()
+        else:
+            self.key_dict = key_dict
+            
         # construct database dictionary 
         db = {}
         for i in table_names:
@@ -208,11 +214,24 @@ class database:
             string = '\n {} :::: {}\n'
             ref_dict[tab] = list(a.columns)
             if not silence:
-                print(string.format(tab, ref_dict[tab]))
+                print(formatString(string, [tab, ref_dict[tab]]))
+                #print(string.format(tab, ref_dict[tab]))
             
         if ret_rn:
             return ref_dict
     
+    def colsFrom(self, table_name, silence = False, ret_rn = False):
+        '''
+        '''
+        table_dict = self.tablesAndCols(silence = True, ret_rn = True)
+        
+        if not silence:
+            print(table_dict[table_name])
+            print(formatString('\nkey: {}', [self.key_dict[table_name]]))
+        
+        if ret_rn:
+            return table_dict[table_name]
+            
     def _where(self, table, condition):
         '''_where function
         '''
@@ -457,12 +476,13 @@ class database:
             
         return tbl
         
-    def addRows(self, table_name, values, save = False):
+    def addRow(self, table_name, values, save = False):
         '''addRows function 
         Add rows to an existing table managed by the database.
         ---- inputs
         table_name: string (name of an existing table)
-        values: a dictionary containing keys as columnames and 
+        values: a dictionary containing keys as columnames.
+        save: specify to save the changes in the actual .csv and .pkl format
         '''
         
         table = self.readTable(table_name)
@@ -475,13 +495,45 @@ class database:
         
         # modify dataframe 
         
-        table = pd.concat(table, line)
-        # save confition 
+        table = pd.concat([table, line])[table.columns]
+                
+        # save condition 
         if save:
-            table.to_csv(formatString(self.reference_path+'{}.csv',table_name))
+            table.to_csv(formatString(self.reference_path+'{}.csv',[table_name]))
             if self.fast_read:
-                table.to_pkl(formatString(self.reference_path+'fastread/{}.pkl', [table_name]))
-        return 
+                table.to_pickle(formatString(self.reference_path+'fastread/{}.pkl', [table_name]))
+        
+        return table
+        
+    def dropRow(self, table_name, key_value, save = False):
+        '''dropRow function
+        Drops (delets) the row of a table.
+        --- inputs
+        table_name: string with the name of the table.
+        key_value: integer with the specific id_key to drop
+        save: False as default. 
+        '''
+        key_value = int(key_value)
+        
+        # get id_name for table 
+        id_name = self.key_dict[table_name]
+        
+        # read table
+        table = self.readTable(table_name)
+        
+        # TODO: check if id exists 
+        
+        # delete value 
+        table = table[table[id_name] != key_value]
+        table.reset_index(inplace=True, drop=True)
+        
+        # save condition 
+        if save:
+            table.to_csv(formatString(self.reference_path+'{}.csv',[table_name]))
+            if self.fast_read:
+                table.to_pickle(formatString(self.reference_path+'fastread/{}.pkl', [table_name]))
+                
+        return table
 
         
 # %% 

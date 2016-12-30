@@ -1,8 +1,8 @@
-id_user,name,sex,age,weight,height,nationality,ethnic
-1,Ana,Female,21,54,1.69,mexican,latin
-2,Rodrigo,Male,22,76,1.75,mexican,latin
-3,Daniel,Male,20,74,7.70,mexican,latin
-4,Manuel,Male,15,56,1.76,mexican,latin
-5,Gabriela,Female,16,43,1.53,mexican,latin
-6,Jaquelin,Female,15,53,1.64,mexican,latin
-7,Teresa,Female,24,55,1.68,mexican,latin
+,id_user,name,sex,age,weight,height,nationality,ethnic
+0,1,Ana,Female,21,54,1.69,mexican,latin
+1,2,Rodrigo,Male,22,76,1.75,mexican,latin
+2,3,Daniel,Male,20,74,7.7,mexican,latin
+3,4,Manuel,Male,15,56,1.76,mexican,latin
+4,5,Gabriela,Female,16,43,1.53,mexican,latin
+5,6,Jaquelin,Female,15,53,1.64,mexican,latin
+6,7,Teresa,Female,24,55,1.68,mexican,latin
