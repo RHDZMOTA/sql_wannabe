@@ -488,10 +488,13 @@ class database:
         table = self.readTable(table_name)
         
         # index
-        ind = np.max(table.index.values)+1
+        ind = [np.max(table.index.values)+1]
+        ref = 0 if type(values[list(values.keys())[0]])==type(1) else len(values[list(values.keys())[0]])-1
+        for i in range(ref):
+            ind.append(ind[-1]+1)
         
         # setup newline
-        line = pd.DataFrame(values, index=[ind])
+        line = pd.DataFrame(values, index=ind)
         
         # modify dataframe 
         
