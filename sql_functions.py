@@ -502,7 +502,7 @@ class database:
                 
         # save condition 
         if save:
-            table.to_csv(formatString(self.reference_path+'{}.csv',[table_name]))
+            table.to_csv(formatString(self.reference_path+'{}.csv',[table_name]),index=False)
             if self.fast_read:
                 table.to_pickle(formatString(self.reference_path+'fastread/{}.pkl', [table_name]))
         
